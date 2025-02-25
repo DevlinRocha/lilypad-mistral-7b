@@ -108,7 +108,8 @@ formatted_response="{
 # Save debug info
 {
     echo "=== Debug Info ==="
-    echo "Input: $1"
+    echo "System: $SYSTEM"
+    echo "Input: $PROMPT"
     echo "Request to Ollama: $request"
     echo "Response from Ollama:"
     echo "$response"
