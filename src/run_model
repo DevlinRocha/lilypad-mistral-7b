@@ -77,7 +77,7 @@ request=$(
 {
   "model": "$MODEL_ID",
   "messages": $messages,
-  "stream": false
+  "stream": false,
   "options": {
     "temperature": $TEMPERATURE,
     "num_ctx": $NUM_CTX,
