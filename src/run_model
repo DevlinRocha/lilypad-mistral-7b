@@ -17,25 +17,25 @@ mkdir -p /outputs
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
-    case "$1" in
+    case $1 in
     --prompt)
-        PROMPT="$2"
+        PROMPT=$2
         shift 2
         ;;
     --system)
-        SYSTEM="$2"
+        SYSTEM=$2
         shift 2
         ;;
     --temperature)
-        TEMPERATURE="$2"
+        TEMPERATURE=$2
         shift 2
         ;;
     --num_ctx)
-        NUM_CTX="$2"
+        NUM_CTX=$2
         shift 2
         ;;
     --num_predict)
-        NUM_PREDICT="$2"
+        NUM_PREDICT=$2
         shift 2
         ;;
     *)
@@ -70,11 +70,11 @@ done
 echo "Ollama server started" >&2
 
 if [[ -z $SYSTEM ]]; then
-    messages="[{\"role\": \"user\", \"content\": \"$PROMPT\"}]"
+    messages="[{"role": "user", "content": $PROMPT}]"
 else
     messages="[
-    {\"role\": \"system\", \"content\": \"$SYSTEM\"},
-    {\"role\": \"user\", \"content\": \"$PROMPT\"}
+    {"role": "system", "content": $SYSTEM},
+    {"role": "user", "content": $PROMPT}
     ]"
 fi
 
@@ -82,7 +82,7 @@ fi
 request=$(
     cat <<EOF
 {
-  "model": "$MODEL_ID",
+  "model": $MODEL_ID,
   "messages": $messages,
   "stream": false,
   "options": {
@@ -98,17 +98,17 @@ EOF
 echo "Making request to Ollama..." >&2
 response=$(curl -s http://127.0.0.1:11434/api/chat \
     -H "Content-Type: application/json" \
-    -d "$request")
+    -d $request)
 
 # Create JSON structure following OpenAI format
-escaped_response=$(echo "$response" | sed 's/"/\\"/g')
-formatted_response='{
+escaped_response=$(echo $response | sed 's/"/\\"/g')
+formatted_response="{
     "id": "cmpl-$(openssl rand -hex 12)",
     "object": "text_completion",
     "created": "$(date +%s)",
-    "model": "$MODEL_ID",
+    "model": $MODEL_ID,
     "choices": [{
-        "text": "$escaped_response",
+        "text": $escaped_response,
         "index": 0,
         "logprobs": null,
         "finish_reason": "stop"
@@ -118,7 +118,7 @@ formatted_response='{
         "completion_tokens": null,
         "total_tokens": null
     }
-}'
+}"
 
 # Save debug info
 {
@@ -128,9 +128,9 @@ formatted_response='{
     echo "Input: $PROMPT"
     echo "Request to Ollama: $request"
     echo "Response from Ollama:"
-    echo "$response"
+    echo $response
     echo "Formatted response:"
-    echo "$formatted_response"
+    echo $formatted_response
     echo "=== Server Status ==="
     echo "Ollama version: $(ollama --version)"
     echo "Model list: $(ollama list)"
@@ -138,9 +138,9 @@ formatted_response='{
 } >"/outputs/debug.log"
 
 # Save and output the raw Ollama response
-echo "$response" >"/outputs/response.json"
-echo "$response"
-echo "$formatted_response" >"/outputs/formatted_response.json"
-echo "$formatted_response"
+echo $response >"/outputs/response.json"
+echo $response
+echo $formatted_response >"/outputs/formatted_response.json"
+echo $formatted_response
 
 exit 0
