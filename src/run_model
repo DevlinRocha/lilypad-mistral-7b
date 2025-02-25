@@ -7,6 +7,11 @@ TEMPERATURE="0.8"
 NUM_CTX="2048"
 NUM_PREDICT="-1"
 
+if [ -z $MODEL_ID ]; then
+    echo "Error: MODEL_ID environment variable must be set." >&2
+    exit 1
+fi
+
 # Create output directory if it doesn't exist
 mkdir -p /outputs
 
@@ -44,16 +49,18 @@ echo "Input: $PROMPT" >&2
 
 # Start the ollama server in the background
 echo "Starting Ollama server..." >&2
-nohup bash -c "ollama serve &" >&2
+ollama serve &
+OLLAMA_PID=$! # Get the PID of the backgrounded process
 
 # Wait for server with timeout
 timeout=30
 start_time=$(date +%s)
-while ! curl -s http://127.0.0.1:11434 >/dev/null; do
+while ! curl -s http://127.0.0.1:11434 >/dev/null 2>&1; do
     current_time=$(date +%s)
     elapsed=$((current_time - start_time))
     if [ $elapsed -gt $timeout ]; then
         echo "Timeout waiting for Ollama server" >&2
+        kill $OLLAMA_PID 2>/dev/null # Attempt to kill the server
         exit 1
     fi
     echo "Waiting for ollama to start... ($elapsed seconds)" >&2
@@ -74,7 +81,7 @@ fi
 # Prepare the chat completion request
 request=$(
     cat <<EOF
-'{
+{
   "model": "$MODEL_ID",
   "messages": $messages,
   "stream": false,
@@ -82,8 +89,8 @@ request=$(
     "temperature": $TEMPERATURE,
     "num_ctx": $NUM_CTX,
     "num_predict": $NUM_PREDICT
-  },
-}'
+  }
+}
 EOF
 )
 
@@ -91,31 +98,32 @@ EOF
 echo "Making request to Ollama..." >&2
 response=$(curl -s http://127.0.0.1:11434/api/chat \
     -H "Content-Type: application/json" \
-    -d $request)
+    -d "$request")
 
 # Create JSON structure following OpenAI format
 escaped_response=$(echo "$response" | sed 's/"/\\"/g')
-formatted_response="{
-    \"id\": \"cmpl-$(openssl rand -hex 12)\",
-    \"object\": \"text_completion\",
-    \"created\": "$(date +%s)",
-    \"model\": \"$MODEL_ID\",
-    \"choices\": [{
-        \"text\": \"$escaped_response\",
-        \"index\": 0,
-        \"logprobs\": null,
-        \"finish_reason\": \"stop\"
+formatted_response='{
+    "id": "cmpl-$(openssl rand -hex 12)",
+    "object": "text_completion",
+    "created": "$(date +%s)",
+    "model": "$MODEL_ID",
+    "choices": [{
+        "text": "$escaped_response",
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop"
     }],
-    \"usage\": {
-        \"prompt_tokens\": null,
-        \"completion_tokens\": null,
-        \"total_tokens\": null
+    "usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
     }
-}"
+}'
 
 # Save debug info
 {
     echo "=== Debug Info ==="
+    date
     echo "System: $SYSTEM"
     echo "Input: $PROMPT"
     echo "Request to Ollama: $request"
