@@ -69,9 +69,9 @@ echo "Ollama server started" >&2
 
 # Prepare the messages array
 if [[ -z "$SYSTEM" ]]; then
-    messages="[{\"role\": \"user\", \"content\": \"$PROMPT\"}]"
+    messages="[{'role': 'user', 'content': '$PROMPT'}]"
 else
-    messages="[{\"role\": \"system\", \"content\": \"$SYSTEM\"}, {\"role\": \"user\", \"content\": \"$PROMPT\"}]"
+    messages="[{'role': 'system', 'content': '$SYSTEM'}, {'role': 'user', 'content': '$PROMPT'}]"
 fi
 
 # Prepare the chat completion request
@@ -99,20 +99,20 @@ response=$(curl -s http://127.0.0.1:11434/api/chat \
 # Create JSON structure following OpenAI format
 escaped_response=$(echo "$response" | sed 's/"/\\"/g')
 formatted_response="{
-    \"id\": \"cmpl-$(openssl rand -hex 12)\",
-    \"object\": \"text_completion\",
-    \"created\": "$(date +%s)",
-    \"model\": \"$MODEL_ID\",
-    \"choices\": [{
-        \"text\": \"$escaped_response\",
-        \"index\": 0,
-        \"logprobs\": null,
-        \"finish_reason\": \"stop\"
+    'id': 'cmpl-$(openssl rand -hex 12)',
+    'object': 'text_completion',
+    'created': "$(date +%s)",
+    'model': '$MODEL_ID',
+    'choices': [{
+        'text': '$escaped_response',
+        'index': 0,
+        'logprobs': null,
+        'finish_reason': 'stop'
     }],
-    \"usage\": {
-        \"prompt_tokens\": null,
-        \"completion_tokens\": null,
-        \"total_tokens\": null
+    'usage': {
+        'prompt_tokens': null,
+        'completion_tokens': null,
+        'total_tokens': null
     }
 }"
 
