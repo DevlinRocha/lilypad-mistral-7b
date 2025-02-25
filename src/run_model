@@ -69,9 +69,9 @@ echo "Ollama server started" >&2
 
 # Prepare the messages array
 if [[ -z "$SYSTEM" ]]; then
-    messages="[{'role': 'user', 'content': '$PROMPT'}]"
+    messages=[{"role": "user", "content": "$PROMPT"}]
 else
-    messages="[{'role': 'system', 'content': '$SYSTEM'}, {'role': 'user', 'content': '$PROMPT'}]"
+    messages=[{"role": "system", "content": "$SYSTEM"}, {"role": "user", "content": "$PROMPT"}]
 fi
 
 # Prepare the chat completion request
