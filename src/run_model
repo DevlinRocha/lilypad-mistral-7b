@@ -2,7 +2,7 @@
 
 # Initialize default values
 PROMPT=""
-SYSTEM=
+SYSTEM=""
 TEMPERATURE="0.8"
 NUM_CTX="2048"
 NUM_PREDICT="-1"
@@ -74,7 +74,7 @@ fi
 # Prepare the chat completion request
 request=$(
     cat <<EOF
-{
+'{
   "model": "$MODEL_ID",
   "messages": $messages,
   "stream": false,
@@ -83,7 +83,7 @@ request=$(
     "num_ctx": $NUM_CTX,
     "num_predict": $NUM_PREDICT
   },
-}
+}'
 EOF
 )
 
@@ -91,7 +91,7 @@ EOF
 echo "Making request to Ollama..." >&2
 response=$(curl -s http://127.0.0.1:11434/api/chat \
     -H "Content-Type: application/json" \
-    -d "$request")
+    -d $request)
 
 # Create JSON structure following OpenAI format
 escaped_response=$(echo "$response" | sed 's/"/\\"/g')
