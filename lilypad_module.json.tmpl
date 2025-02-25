@@ -9,6 +9,9 @@
         "Entrypoint": [
           "/app/src/run_model",
           "--prompt", {{ .prompt }}
+          {{- if .system -}},
+          "--system", {{ .system }}
+          {{- end -}}
           {{- if .temperature -}},
           "--temperature", {{ .temperature }}
           {{- end -}}
