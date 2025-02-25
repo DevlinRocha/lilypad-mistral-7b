@@ -76,11 +76,11 @@ else
     messages="[{"role": "system", "content": "$SYSTEM"}, {"role": "user", "content": "$PROMPT"}]"
 fi
 
-# Prepare the chat completion request using jq
+# Prepare the chat completion request
 request=$(
     cat <<EOF
 {
-  "model "$MODEL_ID" \
+  "model": "$MODEL_ID",
   "messages": "$messages",
   "stream": false,
   "options": {
