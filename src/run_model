@@ -49,7 +49,7 @@ if [[ -z "$system" ]]; then
     )
 else
     messages=(
-        "{\"role\": \"system\", \"content\": \"$system\"}"
+        "{\"role\": \"system\", \"content\": \"$system\"}",
         "{\"role\": \"user\", \"content\": \"$prompt\"}"
     )
 fi
