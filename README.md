@@ -5,6 +5,8 @@ Run [Mistral 7B](https://ollama.com/library/mistral) on Lilypad Network.
 ## Getting Started
 
 ```sh
+export WEB3_PRIVATE_KEY=WEB3_PRIVATE_KEY
+
 lilypad run github.com/DevlinRocha/lilypad-mistral-7b:v0.0.0 -i input=$(echo '{"prompt": "What is the animal order of the frog", "system": "You are a helpful AI assistant", "temperature": "0.8", "num_ctx": "1024", "num_predict": "1024"}' | base64 -w 0)
 ```
 
