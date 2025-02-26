@@ -19,6 +19,11 @@ temperature=$(echo "$input_json" | sed -n 's/.*"temperature":[[:space:]]*"\([^"]
 num_ctx=$(echo "$input_json" | sed -n 's/.*"num_ctx":[[:space:]]*"\([^"]*\)".*/\1/p')
 num_predict=$(echo "$input_json" | sed -n 's/.*"num_predict":[[:space:]]*"\([^"]*\)".*/\1/p')
 
+if [[ -z "$prompt" ]]; then
+    echo "❌ Error: Prompt is required" >&2
+    exit 1
+fi
+
 echo "Prompt: $prompt" >&2
 
 # Start the ollama server in the background
