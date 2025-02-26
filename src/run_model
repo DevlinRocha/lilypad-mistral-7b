@@ -42,15 +42,14 @@ done
 echo "Ollama server started" >&2
 
 # Prepare the messages array
-declare -a messages
 if [[ -z "$system" ]]; then
     messages=(
-        "{\"role\": \"user\", \"content\": \"$prompt\"}"
+        "[{\"role\": \"user\", \"content\": \"$prompt\"}]"
     )
 else
     messages=(
-        "{\"role\": \"system\", \"content\": \"$system\"},
-        {\"role\": \"user\", \"content\": \"$prompt\"}"
+        "[{\"role\": \"system\", \"content\": \"$system\"},
+        {\"role\": \"user\", \"content\": \"$prompt\"}]"
     )
 fi
 
