@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
 # Initialize default values
-PROMPT=""
-SYSTEM=""
-TEMPERATURE="0.8"
-NUM_CTX="2048"
-NUM_PREDICT="-1"
+temperature="0.8"
+num_ctx="2048"
+num_predict="-1"
 
 # Create output directory if it doesn't exist
 mkdir -p /outputs
@@ -21,7 +19,7 @@ temperature=$(echo "$input_json" | sed -n 's/.*"temperature":[[:space:]]*"\([^"]
 num_ctx=$(echo "$input_json" | sed -n 's/.*"num_ctx":[[:space:]]*"\([^"]*\)".*/\1/p')
 num_predict=$(echo "$input_json" | sed -n 's/.*"num_predict":[[:space:]]*"\([^"]*\)".*/\1/p')
 
-echo "Input: $PROMPT" >&2
+echo "Prompt: $prompt" >&2
 
 # Start the ollama server in the background
 echo "Starting Ollama server..." >&2
@@ -44,10 +42,10 @@ done
 echo "Ollama server started" >&2
 
 # Prepare the messages array
-if [[ -z "$SYSTEM" ]]; then
-    messages=[{"role": "user", "content": "$PROMPT"}]
+if [[ -z "$system" ]]; then
+    messages=[{"role": "user", "content": "$prompt"}]
 else
-    messages=[{"role": "system", "content": "$SYSTEM"}, {"role": "user", "content": "$PROMPT"}]
+    messages=[{"role": "system", "content": "$system"}, {"role": "user", "content": "$prompt"}]
 fi
 
 # Prepare the chat completion request
@@ -58,9 +56,9 @@ request=$(
   "messages": "$messages",
   "stream": false,
   "options": {
-    "temperature": "$TEMPERATURE",
-    "num_ctx": "$NUM_CTX",
-    "num_predict": "$NUM_PREDICT"
+    "temperature": "$temperature",
+    "num_ctx": "$num_ctx",
+    "num_predict": "$num_predict"
   }
 }
 EOF
@@ -96,8 +94,8 @@ formatted_response="{
 {
     echo "=== Debug Info ==="
     date
-    echo "System: $SYSTEM"
-    echo "Input: $PROMPT"
+    echo "System: $system"
+    echo "Input: $prompt"
     echo "Request to Ollama: $request"
     echo "Response from Ollama:"
     echo "$response"
