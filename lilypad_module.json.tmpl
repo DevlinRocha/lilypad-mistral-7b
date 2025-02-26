@@ -7,7 +7,7 @@
       "Docker": {
         "WorkingDirectory": "/app",
         "Entrypoint": [
-          "/app/src/run_model", {{ .prompt }}
+          "/app/src/run_model", {{ .input }}
         ],
         "Image": "devlinrocha/mistral-7b:v0.0.14"
       },
