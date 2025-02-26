@@ -52,7 +52,7 @@ request=$(
 {
   "model": "$MODEL_ID",
   "messages": $messages,
-  "stream": false,
+  "stream": false
 }
 EOF
 )
