@@ -61,9 +61,9 @@ request=$(
   "messages": $messages,
   "stream": false,
   "options": {
-    "temperature": "$temperature",
-    "num_ctx": "$num_ctx",
-    "num_predict": "$num_predict"
+    "temperature": $temperature,
+    "num_ctx": $num_ctx,
+    "num_predict": $num_predict
   }
 }
 EOF
