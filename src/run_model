@@ -7,43 +7,19 @@ TEMPERATURE="0.8"
 NUM_CTX="2048"
 NUM_PREDICT="-1"
 
-if [ -z "$MODEL_ID" ]; then
-    echo "Error: MODEL_ID environment variable must be set." >&2
-    exit 1
-fi
-
 # Create output directory if it doesn't exist
 mkdir -p /outputs
 
-# Parse command-line arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-    --prompt)
-        PROMPT="$2"
-        shift 2
-        ;;
-    --system)
-        SYSTEM="$2"
-        shift 2
-        ;;
-    --temperature)
-        TEMPERATURE="$2"
-        shift 2
-        ;;
-    --num_ctx)
-        NUM_CTX="$2"
-        shift 2
-        ;;
-    --num_predict)
-        NUM_PREDICT="$2"
-        shift 2
-        ;;
-    *)
-        echo "Unknown flag: $1" >&2
-        exit 1
-        ;;
-    esac
-done
+# Parse base64 input argument and decode to JSON
+echo "Raw input (base64): $1" >&2
+input_json=$(echo "$1" | base64 --d)
+
+# Parse arguments
+prompt=$(echo "$input_json" | sed -n 's/.*"prompt":[[:space:]]*"\([^"]*\)".*/\1/p')
+system=$(echo "$input_json" | sed -n 's/.*"system":[[:space:]]*"\([^"]*\)".*/\1/p')
+temperature=$(echo "$input_json" | sed -n 's/.*"temperature":[[:space:]]*"\([^"]*\)".*/\1/p')
+num_ctx=$(echo "$input_json" | sed -n 's/.*"num_ctx":[[:space:]]*"\([^"]*\)".*/\1/p')
+num_predict=$(echo "$input_json" | sed -n 's/.*"num_predict":[[:space:]]*"\([^"]*\)".*/\1/p')
 
 echo "Input: $PROMPT" >&2
 

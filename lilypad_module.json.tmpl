@@ -7,20 +7,7 @@
       "Docker": {
         "WorkingDirectory": "/app",
         "Entrypoint": [
-          "/app/src/run_model",
-          "--prompt", {{ .prompt }}
-          {{- if .system -}},
-          "--system", {{ .system }}
-          {{- end -}}
-          {{- if .temperature -}},
-          "--temperature", {{ .temperature }}
-          {{- end -}}
-          {{- if .num_ctx -}},
-          "--num_ctx", {{ .num_ctx }}
-          {{- end -}}
-          {{- if .num_predict -}},
-          "--num_predict", {{ .num_predict }}
-          {{- end -}}
+          "/app/src/run_model", {{ .prompt }}
         ],
         "Image": "devlinrocha/mistral-7b:v0.0.13"
       },
