@@ -60,11 +60,6 @@ request=$(
   "model": "$MODEL_ID",
   "messages": $messages,
   "stream": false,
-  "options": {
-    "temperature": $temperature,
-    "num_ctx": $num_ctx,
-    "num_predict": $num_predict
-  }
 }
 EOF
 )
