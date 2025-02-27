@@ -5,11 +5,10 @@
     "Spec": {
       "Deal": { "Concurrency": 1 },
       "Docker": {
-        "WorkingDirectory": "/app",
         "Entrypoint": [
-          "/app/src/run_model", {{ .input }}
+          "/app/src/run_model", {{ .request }}
         ],
-        "Image": "devlinrocha/mistral-7b:v0.0.34"
+        "Image": "devlinrocha/mistral-7b@sha256:fd9159796b190aef37fd5de9964c71b2cbf54a1d2c7fa9fa0acecdadeabc6c72"
       },
       "Engine": "Docker",
       "Network": { "Type": "None" },
