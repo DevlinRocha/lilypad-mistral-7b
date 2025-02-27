@@ -31,7 +31,7 @@ echo "Ollama server started" >&2
 echo "Making request to Ollama..." >&2
 response=$(curl -s http://127.0.0.1:11434/api/chat \
     -H "Content-Type: application/json" \
-    -d "$request")
+    -d "$input_json")
 
 # Save debug info
 {
@@ -39,7 +39,7 @@ response=$(curl -s http://127.0.0.1:11434/api/chat \
     date
     echo "Input (base64): $1"
     echo "Decoded input: $input_json"
-    echo "Request to Ollama: $request"
+    echo "Request to Ollama: $input_json"
     echo "Response from Ollama:"
     echo "$response"
     echo "Formatted response:"
